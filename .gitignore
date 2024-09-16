@@ -11,5 +11,5 @@
 !.gitignore
 !init.sh
 !/pre-learning/*/*
-/fceux-am
 /am-kernels
+/fceux-am
