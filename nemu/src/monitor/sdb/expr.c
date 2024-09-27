@@ -502,5 +502,5 @@ word_t expr(char *e, bool *success)
     Log("parse error");
   }
 
-  return 0;
+  return res;
 }

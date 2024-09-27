@@ -82,9 +82,12 @@ static int cmd_q(char *args) {
   return -1;
 }
 
-static int cmd_x(char *args) {
+static int cmd_p(char *args) {
   bool success;
-  expr(args, &success);
+  word_t a = expr(args, &success);
+  if (success) {
+    printf("expression: %d\n", a);
+  }
   return 0;
 }
 
@@ -100,7 +103,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step the execution of the program at the given number of cycles", cmd_si },
   { "info", "Display information about the system", cmd_info },
-  { "x", "Evaluate an expression and display the result", cmd_x }
+  { "p", "Evaluate an expression and display the result", cmd_p }
 
   /* TODO: Add more commands */
 
