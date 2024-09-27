@@ -446,7 +446,7 @@ word_t eval(int level)
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
 
-    if (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
+    while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
     {
       parse_index++;
       type = tokens[parse_index].type;
