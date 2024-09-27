@@ -459,10 +459,17 @@ int error = false;
 //   return lval;
 // }
 
-void next_token()
+void next_token(int line)
 {
+  char str[44];
+  get_token_str(parse_index, str);
+  Log("NEXT_TOKEN %d: parse_index = %d, type_str = %s, str = %s", line, parse_index, str, tokens[parse_index].str);
   parse_index++;
+  get_token_str(parse_index, str);
+  Log("NEXT_TOKEN %d: parse_index = %d, type_str = %s, str = %s", line, parse_index, str, tokens[parse_index].str);
 }
+
+#define next_token() next_token(__LINE__)
 
 word_t parse_hex(char *str)
 {
