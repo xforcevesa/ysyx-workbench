@@ -384,7 +384,11 @@ word_t eval(int level)
     case TK_MUL:
       parse_index++;
       rval = eval(TK_GT);
-      lval += rval;
+      lval *= rval;
+    case TK_DIV:
+      parse_index++;
+      rval = eval(TK_GT);
+      lval /= rval;
     }
   }
 
