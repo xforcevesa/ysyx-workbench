@@ -22,6 +22,8 @@
 
 #include "memory/vaddr.h"
 
+// #define Log(...) (printf(__VA_ARGS__)
+
 enum
 {
   TK_NOTYPE = 256,
