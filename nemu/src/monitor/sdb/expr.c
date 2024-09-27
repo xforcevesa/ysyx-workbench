@@ -219,6 +219,7 @@ void get_token_str(int i, char *str)
     strcpy(str, "TK_RPAREN");
     break;
   default:
+    strcpy(str, "unknown");
     break;
   }
 }
