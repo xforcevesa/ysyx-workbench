@@ -206,9 +206,9 @@ word_t eval(int level) {
     return -1;
   }
 
-  printf("level = %d, parse_index = %d, nr_token = %d\n", level, parse_index, nr_token);
+  Log("level = %d, parse_index = %d, nr_token = %d\n", level, parse_index, nr_token);
   if (parse_index > nr_token) {
-    printf("parse index out of range\n");
+    Log("parse index out of range\n");
     return 0;
   }
 
@@ -280,7 +280,7 @@ word_t eval(int level) {
      parse_index ++;
      lval = eval(TK_ADD);
      if (tokens[parse_index].type != TK_RPAREN) {
-       printf("missing right parenthesis\n");
+       Log("missing right parenthesis\n");
        error = true;
      } else {
        parse_index ++;
@@ -316,10 +316,10 @@ word_t expr(char *e, bool *success) {
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
   int res = eval(TK_ADD);
-  if (error) {
-    printf("parsed value: %d\n", res);
+  if (!error) {
+    Log("parsed value: %d\n", res);
   } else {
-    printf("parse error\n");
+    Log("parse error\n");
   }
 
   return 0;
