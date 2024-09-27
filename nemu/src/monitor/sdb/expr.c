@@ -201,7 +201,7 @@ int parse_index = 0;
 int error = false;
 
 word_t eval(int level) {
-  if (parse_index >= nr_token) {
+  if (parse_index > nr_token) {
     printf("parse index out of range\n");
     return 0;
   }
