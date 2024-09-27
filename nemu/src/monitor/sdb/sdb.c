@@ -47,6 +47,19 @@ static int cmd_c(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+  uint64_t a = 0;
+  for (; args && *args; args++) {
+    if (*args >= '0' && *args <= '9') {
+      a = a * 10 + (*args - '0');
+    } else {
+      break;
+    }
+  }
+  cpu_exec(a);
+  return 0;
+}
+
 
 static int cmd_q(char *args) {
   return -1;
@@ -62,6 +75,7 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Single-step the execution of the program at the given number of cycles", cmd_si }
 
   /* TODO: Add more commands */
 
