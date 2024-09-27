@@ -56,6 +56,9 @@ static int cmd_si(char *args) {
       break;
     }
   }
+  if (a == 0) {
+    a = 1;
+  }
   cpu_exec(a);
   return 0;
 }
@@ -79,6 +82,12 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_x(char *args) {
+  bool success;
+  expr(args, &success);
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -90,7 +99,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Single-step the execution of the program at the given number of cycles", cmd_si },
-  { "info", "Display information about the system", cmd_info }
+  { "info", "Display information about the system", cmd_info },
+  { "x", "Evaluate an expression and display the result", cmd_x }
 
   /* TODO: Add more commands */
 

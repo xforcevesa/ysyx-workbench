@@ -24,7 +24,8 @@ enum {
   TK_NOTYPE = 256, TK_EQ,
 
   /* TODO: Add more token types */
-
+  TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_MOD,
+  TK_GT, TK_LT, TK_GE, TK_LE
 };
 
 static struct rule {
@@ -37,8 +38,15 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
+  {"\\*", TK_MUL},         // asterisk
+  {"\\/", TK_DIV},           // slash
+  {"\\%", TK_MOD},          // percent
+  {"\\>", TK_GT},          // greater than
+  {"\\<", TK_LT},          // less than
+  {">=", TK_GE},         // greater than or equal to
+  {"<=", TK_LE},         // less than or equal to
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -94,8 +102,47 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
+        if (nr_token >= 32) {
+          printf("too many tokens\n");
+          return false;
+        }
+
+        tokens[nr_token].type = rules[i].token_type;
+        strncpy(tokens[nr_token].str, substr_start, substr_len);
+        tokens[nr_token].str[substr_len] = '\0';
+        nr_token ++;
+
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_ADD:
+           printf("NO. %d: TK_ADD\n", i);
+           break;
+          case TK_SUB:
+           printf("NO. %d: TK_SUB\n", i);
+           break;
+          case TK_MUL:
+           printf("NO. %d: TK_MUL\n", i);
+           break;
+          case TK_DIV:
+           printf("NO. %d: TK_DIV\n", i);
+           break;
+          case TK_MOD:
+           printf("NO. %d: TK_MOD\n", i);
+           break;
+          case TK_GT:
+           printf("NO. %d: TK_GT\n", i);
+           break;
+          case TK_LT:
+           printf("NO. %d: TK_LT\n", i);
+           break;
+          case TK_GE:
+           printf("NO. %d: TK_GE\n", i);
+           break;
+          case TK_LE:
+           printf("NO. %d: TK_LE\n", i);
+           break;
+          default:
+           printf("NO. %d: TK_NOTYPE\n", i);
+           break;
         }
 
         break;
@@ -119,7 +166,7 @@ word_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  // TODO();
 
   return 0;
 }
