@@ -25,7 +25,9 @@ enum {
 
   /* TODO: Add more token types */
   TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_MOD,
-  TK_GT, TK_LT, TK_GE, TK_LE, TK_NUM,
+  TK_GT, TK_LT, TK_GE, TK_LE, 
+  
+  TK_NUM,
   TK_IDENT, TK_LPAREN, TK_RPAREN,
 };
 
@@ -196,14 +198,92 @@ void get_token_str(int i, char *str) {
 
 int parse_index = 0;
 
-// word_t evaluate(int level) {
-//   if (parse_index >= nr_token) {
-//     printf("parse index out of range\n");
-//     return 0;
-//   }
+int error = false;
 
+word_t eval(int level) {
+  if (parse_index >= nr_token) {
+    printf("parse index out of range\n");
+    return 0;
+  }
+
+  enum {
+    NUM_HEX,
+    NUM_OCT,
+    NUM_DEC
+  } number_mode;
+
+  int type = tokens[parse_index].type;
+  char* str = tokens[parse_index].str;
+
+  word_t lval = 0;
+
+  bool is_success = true;
+
+  switch (type) {
+    case TK_NUM:
+     parse_index ++;
+     number_mode = *str == '0' ? \
+          ((*(str + 1) == 'x' || *(str + 1) == 'X') ? NUM_HEX : NUM_OCT) : NUM_DEC;
+     switch (number_mode) {
+       case NUM_HEX:
+        for (char* p = str + 2; *p != '\0'; p ++) {
+          if (*p >= '0' && *p <= '9') {
+            lval = (lval << 4) + (*p - '0');
+          } else if (*p >= 'a' && *p <= 'f') {
+            lval = (lval << 4) + (*p - 'a' + 10);
+          } else if (*p >= 'A' && *p <= 'F') {
+            lval = (lval << 4) + (*p - 'A' + 10);
+          } else {
+            error = true;
+          }
+        }
+        break;
+       case NUM_OCT:
+        for (char* p = str + 1; *p != '\0'; p ++) {
+          if (*p >= '0' && *p <= '7') {
+            lval = (lval << 3) + (*p - '0');
+          } else {
+            error = true;
+          }
+        }
+        break;
+       case NUM_DEC:
+        for (char* p = str; *p != '\0'; p ++) {
+          if (*p >= '0' && *p <= '9') {
+            lval = lval * 10 + (*p - '0');
+          } else {
+            error = true;
+          }
+        }
+        break;
+       default:
+        break;
+     }
+    case TK_IDENT:
+     parse_index ++;
+    //  printf("identifier: %s\n", str);
+     if (*str == '$') {
+      lval = isa_reg_str2val(str + 1, &is_success);
+      if (is_success) {
+        error = true;
+      }
+     }
+     break;
+    case TK_LPAREN:
+     parse_index ++;
+     lval = eval(TK_ADD);
+     if (tokens[parse_index].type != TK_RPAREN) {
+       printf("missing right parenthesis\n");
+       error = true;
+     } else {
+       parse_index ++;
+     }
+    default:
+      break;
+  }
+  return lval;
   
-// }
+}
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -223,6 +303,7 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
+  printf("parsed value: %d\n", eval(TK_ADD));
 
   return 0;
 }
