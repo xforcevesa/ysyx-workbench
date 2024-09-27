@@ -554,7 +554,7 @@ word_t eval(int level)
     return -1;
   }
 
-  if (parse_index > nr_token)
+  if (parse_index >= nr_token)
   {
     Log("parse index out of range");
     return 0;
@@ -573,7 +573,7 @@ word_t eval(int level)
   while (type == TK_NOTYPE)
   {
     next_token();
-    if (parse_index > nr_token)
+    if (parse_index >= nr_token)
     {
       Log("parse index out of range");
       return 0;
@@ -590,7 +590,7 @@ word_t eval(int level)
 
   next_token();
 
-  if (parse_index > nr_token)
+  if (parse_index >= nr_token)
   {
     Log("parse index out of range");
     return 0;
@@ -660,7 +660,7 @@ word_t eval(int level)
 
   word_t rval = 0;
 
-  if (parse_index > nr_token)
+  if (parse_index >= nr_token)
   {
     Log("parse index out of range");
     return lval;
