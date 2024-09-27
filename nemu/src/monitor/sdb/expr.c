@@ -116,35 +116,7 @@ static bool make_token(char *e) {
         nr_token ++;
 
         switch (rules[i].token_type) {
-          case TK_ADD:
-           printf("NO. %d: TK_ADD\n", i);
-           break;
-          case TK_SUB:
-           printf("NO. %d: TK_SUB\n", i);
-           break;
-          case TK_MUL:
-           printf("NO. %d: TK_MUL\n", i);
-           break;
-          case TK_DIV:
-           printf("NO. %d: TK_DIV\n", i);
-           break;
-          case TK_MOD:
-           printf("NO. %d: TK_MOD\n", i);
-           break;
-          case TK_GT:
-           printf("NO. %d: TK_GT\n", i);
-           break;
-          case TK_LT:
-           printf("NO. %d: TK_LT\n", i);
-           break;
-          case TK_GE:
-           printf("NO. %d: TK_GE\n", i);
-           break;
-          case TK_LE:
-           printf("NO. %d: TK_LE\n", i);
-           break;
           default:
-           printf("NO. %d: TK_NOTYPE\n", i);
            break;
         }
 
@@ -162,10 +134,70 @@ static bool make_token(char *e) {
 }
 
 
+
+void get_token_str(int i, char *str) {
+  if (i >= nr_token) {
+    printf("token index out of range\n");
+    return;
+  }
+
+  switch (tokens[i].type) {
+    case TK_NUM:
+     strcpy(str, "TK_NUM");
+     break;
+    case TK_IDENT:
+     strcpy(str, "TK_IDENT");
+     break;
+    case TK_ADD:
+      strcpy(str, "TK_ADD");
+     break;
+    case TK_SUB:
+      strcpy(str, "TK_SUB");
+     break;
+    case TK_MUL:
+      strcpy(str, "TK_MUL");
+     break;
+    case TK_DIV:
+      strcpy(str, "TK_DIV");
+     break;
+    case TK_MOD:
+      strcpy(str, "TK_MOD");
+     break;
+    case TK_GT:
+      strcpy(str, "TK_GT");
+     break;
+    case TK_LT:
+      strcpy(str, "TK_LT");
+     break;
+    case TK_GE:
+      strcpy(str, "TK_GE");
+     break;
+    case TK_LE:
+      strcpy(str, "TK_LE");
+     break;
+    case TK_EQ:
+      strcpy(str, "TK_EQ");
+     break;
+    case TK_NOTYPE:
+      strcpy(str, "TK_NOTYPE");
+     break;
+    default:
+     break;
+  }
+}
+
+
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
+  }
+
+  char str[44];
+
+  for (int i = 0; i < nr_token; i ++) {
+    get_token_str(i, str);
+    printf("token %d: type = %s, str = %s\n", i, str, tokens[i].str);
   }
 
   /* TODO: Insert codes to evaluate the expression. */
