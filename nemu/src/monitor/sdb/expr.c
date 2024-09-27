@@ -496,10 +496,12 @@ word_t expr(char *e, bool *success)
   if (!error)
   {
     Log("parsed value: %d", res);
+    *success = true;
   }
   else
   {
     Log("parse error");
+    *success = false;
   }
 
   return res;
