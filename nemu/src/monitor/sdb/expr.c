@@ -353,14 +353,11 @@ word_t eval(int level)
     break;
   case TK_LPAREN:
     lval = eval(TK_ADD);
+    parse_index++;
     if (tokens[parse_index].type != TK_RPAREN)
     {
       Log("missing right parenthesis");
       error = true;
-    }
-    else
-    {
-      parse_index++;
     }
     break;
   default:
