@@ -54,6 +54,7 @@ static struct rule
 
     {" +", TK_NOTYPE},                      // spaces
     {"\\+", TK_ADD},                        // plus
+    {"-", TK_SUB},                          // minus
     {"==", TK_EQ},                          // equal
     {"\\*", TK_MUL},                        // asterisk
     {"/", TK_DIV},                          // slash
