@@ -265,7 +265,7 @@ word_t eval(int level) {
     //  printf("identifier: %s\n", str);
      if (*str == '$') {
       lval = isa_reg_str2val(str + 1, &is_success);
-      if (is_success) {
+      if (!is_success) {
         error = true;
       }
      }
