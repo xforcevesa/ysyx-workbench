@@ -167,7 +167,7 @@ void get_token_str(int i, char *str)
 {
   if (i >= nr_token)
   {
-    printf("token index out of range\n");
+    Log("token index out of range\n");
     return;
   }
 
