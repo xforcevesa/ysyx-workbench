@@ -20,6 +20,8 @@
  */
 #include <regex.h>
 
+#include "memory/vaddr.h"
+
 enum
 {
   TK_NOTYPE = 256,
@@ -358,6 +360,11 @@ word_t eval(int level)
       Log("missing right parenthesis");
       error = true;
     }
+    parse_index++;
+    break;
+  case TK_MUL:
+    lval = eval(TK_NUM);
+    lval = vaddr_read(lval, sizeof(word_t));
     parse_index++;
     break;
   default:
