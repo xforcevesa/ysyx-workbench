@@ -50,7 +50,7 @@ static struct rule {
   {"<", TK_LT},          // less than
   {">=", TK_GE},         // greater than or equal to
   {"<=", TK_LE},         // less than or equal to
-  {"[0-9]+", TK_NUM},    // number
+  {"0?x?[0-9]+", TK_NUM},    // number
   {"[a-zA-Z_$][a-zA-Z0-9_$]*", TK_IDENT},  // identifier
   {"\\(", TK_LPAREN},      // left parenthesis
   {"\\)", TK_RPAREN},      // right parenthesis
