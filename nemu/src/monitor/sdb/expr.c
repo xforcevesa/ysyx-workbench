@@ -312,6 +312,7 @@ word_t eval(int level)
         }
         else
         {
+          Log("invalid character in number: %c", *p);
           error = true;
         }
       }
