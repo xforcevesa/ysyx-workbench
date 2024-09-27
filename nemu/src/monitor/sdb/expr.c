@@ -320,6 +320,7 @@ word_t eval(int level)
     default:
       break;
     }
+    break;
   case TK_IDENT:
     parse_index++;
     //  printf("identifier: %s\n", str);
@@ -349,6 +350,7 @@ word_t eval(int level)
     {
       parse_index++;
     }
+    break;
   default:
     break;
   }
