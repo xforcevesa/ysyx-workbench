@@ -228,238 +228,6 @@ int parse_index = 0;
 
 int error = false;
 
-// word_t eval(int level)
-// {
-
-//   if (error)
-//   {
-//     return -1;
-//   }
-
-//   if (parse_index > nr_token)
-//   {
-//     Log("parse index out of range");
-//     return 0;
-//   }
-
-//   enum
-//   {
-//     NUM_HEX,
-//     NUM_OCT,
-//     NUM_DEC
-//   } number_mode;
-
-//   int type = tokens[parse_index].type;
-//   char *str = tokens[parse_index].str;
-
-//   if (type == TK_NOTYPE)
-//   {
-//     parse_index++;
-//     if (parse_index > nr_token)
-//     {
-//       Log("parse index out of range");
-//       return 0;
-//     }
-//     type = tokens[parse_index].type;
-//     str = tokens[parse_index].str;
-//   }
-
-//   Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
-
-//   word_t lval = 0;
-
-//   bool is_success = true;
-
-//   parse_index++;
-
-//   if (parse_index > nr_token)
-//   {
-//     Log("parse index out of range");
-//     return 0;
-//   }
-
-//   switch (type)
-//   {
-//   case TK_NUM:
-//     number_mode = *str == '0' ? ((*(str + 1) == 'x' || *(str + 1) == 'X') ? NUM_HEX : NUM_OCT) : NUM_DEC;
-//     switch (number_mode)
-//     {
-//     case NUM_HEX:
-//       for (char *p = str + 2; *p != '\0'; p++)
-//       {
-//         if (*p >= '0' && *p <= '9')
-//         {
-//           lval = (lval << 4) + (*p - '0');
-//         }
-//         else if (*p >= 'a' && *p <= 'f')
-//         {
-//           lval = (lval << 4) + (*p - 'a' + 10);
-//         }
-//         else if (*p >= 'A' && *p <= 'F')
-//         {
-//           lval = (lval << 4) + (*p - 'A' + 10);
-//         }
-//         else
-//         {
-//           error = true;
-//         }
-//       }
-//       break;
-//     case NUM_OCT:
-//       for (char *p = str + 1; *p != '\0'; p++)
-//       {
-//         if (*p >= '0' && *p <= '7')
-//         {
-//           lval = (lval << 3) + (*p - '0');
-//         }
-//         else
-//         {
-//           error = true;
-//         }
-//       }
-//       break;
-//     case NUM_DEC:
-//       for (char *p = str; *p != '\0'; p++)
-//       {
-//         if (*p >= '0' && *p <= '9')
-//         {
-//           lval = lval * 10 + (*p - '0');
-//         }
-//         else
-//         {
-//           Log("invalid character in number: %c", *p);
-//           error = true;
-//         }
-//       }
-//       break;
-//     default:
-//       break;
-//     }
-//     break;
-//   case TK_IDENT:
-//     //  printf("identifier: %s\n", str);
-//     if (*str == '$')
-//     {
-//       is_success = true;
-//       lval = isa_reg_str2val(str + 1, &is_success);
-//       if (!is_success)
-//       {
-//         error = true;
-//       }
-//     }
-//     else
-//     {
-//       error = true;
-//     }
-//     break;
-//   case TK_LPAREN:
-//     lval = eval(TK_ADD);
-//     if (tokens[parse_index].type != TK_RPAREN)
-//     {
-//       Log("missing right parenthesis");
-//       error = true;
-//     }
-//     parse_index++;
-//     break;
-//   default:
-//     break;
-//   }
-//   if (error)
-//   {
-//     Log("parse error internal 1, lval = %d", lval);
-//     return -1;
-//   }
-
-//   type = tokens[parse_index].type;
-//   str = tokens[parse_index].str;
-
-//   if (type == TK_NOTYPE && (parse_index + 1) < nr_token)
-//   {
-//     parse_index++;
-//     type = tokens[parse_index].type;
-//     str = tokens[parse_index].str;
-//   }
-
-//   word_t rval = 0;
-
-//   // parse_index++;
-//   if (parse_index > nr_token)
-//   {
-//     Log("parse index out of range");
-//     return lval;
-//   }
-
-//   while (type >= level && parse_index <= nr_token)
-//   {
-//     char str2[44];
-//     get_token_str(parse_index, str2);
-//     Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
-//     parse_index++;
-//     if (type == TK_RPAREN) {
-//       parse_index--;
-//       break;
-//     }
-//     switch (type)
-//     {
-//     case TK_ADD:
-//       rval = eval(TK_MUL);
-//       Log("lval = %d, add rval = %d\n", lval, rval);
-//       lval += rval;
-//       break;
-//     case TK_SUB:
-//       rval = eval(TK_MUL);
-//       lval -= rval;
-//       break;
-//     case TK_MUL:
-//       rval = eval(TK_GT);
-//       lval *= rval;
-//       break;
-//     case TK_DIV:
-//       Log("lval = %d, div rval = %d\n", lval, rval);
-//       rval = eval(TK_GT);
-//       lval /= rval;
-//       break;
-//     case TK_MOD:
-//       rval = eval(TK_GT);
-//       lval %= rval;
-//       break;
-//     case TK_GT:
-//       rval = eval(TK_NUM);
-//       lval = (lval > rval) ? 1 : 0;
-//       break;
-//     case TK_LT:
-//       rval = eval(TK_NUM);
-//       lval = (lval < rval) ? 1 : 0;
-//       break;
-//     case TK_GE:
-//       rval = eval(TK_NUM);
-//       lval = (lval >= rval) ? 1 : 0;
-//       break;
-//     case TK_LE:
-//       rval = eval(TK_NUM);
-//       lval = (lval <= rval) ? 1 : 0;
-//       break;
-//     case TK_EQ:
-//       rval = eval(TK_NUM);
-//       lval = (lval == rval) ? 1 : 0;
-//       break;
-//     default:
-//       break;
-//     }
-//     type = tokens[parse_index].type;
-//     str = tokens[parse_index].str;
-
-//     while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
-//     {
-//       parse_index++;
-//       type = tokens[parse_index].type;
-//       str = tokens[parse_index].str;
-//     }
-//   }
-
-//   return lval;
-// }
-
 void next_token(const char* file, int line)
 {
   char str[44];
@@ -547,195 +315,124 @@ word_t parse_reg(char *str)
   }
 }
 
-word_t eval(int level)
-{
-  if (error)
-  {
-    return -1;
-  }
-
-  if (parse_index >= nr_token)
-  {
-    Log("parse index out of range");
-    return 0;
-  }
-
-  enum
-  {
-    NUM_HEX,
-    NUM_OCT,
-    NUM_DEC
-  } number_mode;
-
-  int type = tokens[parse_index].type;
-  char *str = tokens[parse_index].str;
-
-  while (type == TK_NOTYPE)
-  {
-    next_token();
-    if (parse_index >= nr_token)
-    {
-      Log("parse index out of range");
-      return 0;
+word_t eval(int level) {
+    if (error) {
+        return -1;
     }
-    type = tokens[parse_index].type;
-    str = tokens[parse_index].str;
-  }
 
-  Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
+    if (parse_index >= nr_token) {
+        Log("parse index out of range");
+        return 0;
+    }
 
-  word_t lval = 0;
+    // Initialize the left operand
+    word_t lval = 0;
+    int type = tokens[parse_index].type;
+    char *str = tokens[parse_index].str;
 
-  // bool is_success = true;
+    // Skip notype tokens
+    while (type == TK_NOTYPE) {
+        parse_index++;
+        if (parse_index >= nr_token) {
+            Log("parse index out of range");
+            return 0;
+        }
+        type = tokens[parse_index].type;
+        str = tokens[parse_index].str;
+    }
 
-  next_token();
+    // Evaluate the left operand
+    switch (type) {
+    case TK_NUM:
+        if (str[0] == '0') {
+            if (str[1] == 'x' || str[1] == 'X') {
+                lval = parse_hex(str + 2);
+            } else {
+                lval = parse_oct(str + 1);
+            }
+        } else {
+            lval = parse_num(str);
+        }
+        parse_index++;
+        break;
 
-  if (parse_index >= nr_token)
-  {
-    Log("parse index out of range");
-    return 0;
-  }
+    case TK_IDENT:
+        lval = parse_reg(str);
+        parse_index++;
+        break;
 
-  switch (type)
-  {
-  case TK_NUM:
-    number_mode = *str == '0' ? ((*(str + 1) == 'x' || *(str + 1) == 'X') ? NUM_HEX : NUM_OCT) : NUM_DEC;
-    switch (number_mode)
-    {
-    case NUM_HEX:
-      lval = parse_hex(str + 2);
-      break;
-    case NUM_OCT:
-      lval = parse_oct(str + 1);
-      break;
-    case NUM_DEC:
-      lval = parse_num(str);
-      break;
+    case TK_LPAREN:
+        parse_index++;
+        lval = eval(TK_ADD); // Start evaluation inside parentheses
+        if (tokens[parse_index].type != TK_RPAREN) {
+            Log("missing right parenthesis");
+            error = true;
+        }
+        parse_index++; // Skip ')'
+        break;
+
     default:
-      break;
+        Log("unexpected token type: %d", type);
+        error = true;
+        return 0;
     }
-    break;
-  case TK_IDENT:
-    //  printf("identifier: %s\n", str);
-    if (*str == '$')
-    {
-      // is_success = true;
-      lval = parse_reg(str);
+
+    if (error) {
+        return -1;
     }
-    else
-    {
-      Log("invalid identifier: %s", str);
-      error = true;
+
+    // Process the remaining tokens based on operator precedence
+    while (parse_index < nr_token && type >= level) {
+        type = tokens[parse_index].type;
+        parse_index++; // Move to the next token
+
+        word_t rval = eval(type == TK_ADD ? TK_ADD : level + 1); // Recursive call for right operand
+
+        // Perform the operation based on the current token type
+        switch (type) {
+        case TK_ADD:
+            lval += rval;
+            break;
+        case TK_SUB:
+            lval -= rval;
+            break;
+        case TK_MUL:
+            lval *= rval;
+            break;
+        case TK_DIV:
+            if (rval == 0) {
+                Log("division by zero");
+                error = true;
+                return 0;
+            }
+            lval /= rval;
+            break;
+        case TK_MOD:
+            lval %= rval;
+            break;
+        case TK_GT:
+            lval = (lval > rval) ? 1 : 0;
+            break;
+        case TK_LT:
+            lval = (lval < rval) ? 1 : 0;
+            break;
+        case TK_GE:
+            lval = (lval >= rval) ? 1 : 0;
+            break;
+        case TK_LE:
+            lval = (lval <= rval) ? 1 : 0;
+            break;
+        case TK_EQ:
+            lval = (lval == rval) ? 1 : 0;
+            break;
+        default:
+            Log("unexpected token type in evaluation: %d", type);
+            error = true;
+            return 0;
+        }
     }
-    break;
-  case TK_LPAREN:
-    lval = eval(TK_ADD);
-    if (tokens[parse_index].type != TK_RPAREN)
-    {
-      Log("missing right parenthesis");
-      error = true;
-    }
-    next_token();
-    break;
-  default:
-    Log("invalid token: %d, %s", type, str);
-    error = true;
-    break;
-  }
-  if (error)
-  {
-    Log("parse error internal 1, lval = %d", lval);
-    return -1;
-  }
 
-  type = tokens[parse_index].type;
-  str = tokens[parse_index].str;
-
-  while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
-  {
-    next_token();
-    type = tokens[parse_index].type;
-    str = tokens[parse_index].str;
-  }
-
-  word_t rval = 0;
-
-  if (parse_index >= nr_token)
-  {
-    Log("parse index out of range");
     return lval;
-  }
-
-  while (type >= level && parse_index <= nr_token)
-  {
-    char str2[44];
-    get_token_str(parse_index, str2);
-    Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
-    next_token();
-    if (type == TK_RPAREN) {
-      
-    }
-    switch (type)
-    {
-    case TK_ADD:
-      rval = eval(TK_MUL);
-      Log("lval = %d, add rval = %d\n", lval, rval);
-      lval += rval;
-      break;
-    case TK_SUB:
-      rval = eval(TK_MUL);
-      lval -= rval;
-      break;
-    case TK_MUL:
-      rval = eval(TK_GT);
-      lval *= rval;
-      break;
-    case TK_DIV:
-      Log("lval = %d, div rval = %d\n", lval, rval);
-      rval = eval(TK_GT);
-      lval /= rval;
-      break;
-    case TK_MOD:
-      rval = eval(TK_GT);
-      lval %= rval;
-      break;
-    case TK_GT:
-      rval = eval(TK_NUM);
-      lval = (lval > rval) ? 1 : 0;
-      break;
-    case TK_LT:
-      rval = eval(TK_NUM);
-      lval = (lval < rval) ? 1 : 0;
-      break;
-    case TK_GE:
-      rval = eval(TK_NUM);
-      lval = (lval >= rval) ? 1 : 0;
-      break;
-    case TK_LE:
-      rval = eval(TK_NUM);
-      lval = (lval <= rval) ? 1 : 0;
-      break;
-    case TK_EQ:
-      rval = eval(TK_NUM);
-      lval = (lval == rval) ? 1 : 0;
-      break;
-    default:
-      Log("invalid token: %d, %s", type, str);
-      error = true;
-      break;
-    }
-    type = tokens[parse_index].type;
-    str = tokens[parse_index].str;
-
-    while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
-    {
-      next_token();
-      type = tokens[parse_index].type;
-      str = tokens[parse_index].str;
-    }
-  }
-
-  return lval;
 }
 
 word_t expr(char *e, bool *success)
