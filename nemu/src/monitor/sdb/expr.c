@@ -395,7 +395,7 @@ word_t eval(int level)
   {
     char str2[44];
     get_token_str(parse_index, str2);
-    Log("level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
+    Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
     parse_index++;
     switch (type)
     {
