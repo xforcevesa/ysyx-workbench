@@ -282,11 +282,16 @@ word_t eval(int level) {
     default:
       break;
   }
+  if (error) {
+    return -1;
+  }
   return lval;
   
 }
 
 word_t expr(char *e, bool *success) {
+  parse_index = 0;
+  error = false;
   if (!make_token(e)) {
     *success = false;
     return 0;
