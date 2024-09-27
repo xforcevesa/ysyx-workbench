@@ -366,7 +366,7 @@ word_t eval(int level)
   type = tokens[parse_index].type;
   str = tokens[parse_index].str;
 
-  if (type == TK_NOTYPE)
+  if (type == TK_NOTYPE && (parse_index + 1) < nr_token)
   {
     parse_index++;
     type = tokens[parse_index].type;
@@ -376,7 +376,7 @@ word_t eval(int level)
   word_t rval = 0;
 
   parse_index++;
-  while (type >= level)
+  while (type >= level && parse_index < nr_token)
   {
     switch (type)
     {
@@ -396,7 +396,7 @@ word_t eval(int level)
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
 
-    if (type == TK_NOTYPE)
+    if (type == TK_NOTYPE && (parse_index + 1) < nr_token)
     {
       parse_index++;
       type = tokens[parse_index].type;
