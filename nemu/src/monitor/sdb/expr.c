@@ -26,7 +26,7 @@ enum {
   /* TODO: Add more token types */
   TK_ADD, TK_SUB, TK_MUL, TK_DIV, TK_MOD,
   TK_GT, TK_LT, TK_GE, TK_LE, TK_NUM,
-  TK_IDENT,
+  TK_IDENT, TK_LPAREN, TK_RPAREN,
 };
 
 static struct rule {
@@ -50,6 +50,8 @@ static struct rule {
   {"<=", TK_LE},         // less than or equal to
   {"[0-9]+", TK_NUM},    // number
   {"[a-zA-Z_$][a-zA-Z0-9_$]*", TK_IDENT},  // identifier
+  {"\\(", TK_LPAREN},      // left parenthesis
+  {"\\)", TK_RPAREN},      // right parenthesis
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -180,6 +182,12 @@ void get_token_str(int i, char *str) {
      break;
     case TK_NOTYPE:
       strcpy(str, "TK_NOTYPE");
+     break;
+    case TK_LPAREN:
+      strcpy(str, "TK_LPAREN");
+     break;
+    case TK_RPAREN:
+      strcpy(str, "TK_RPAREN");
      break;
     default:
      break;
