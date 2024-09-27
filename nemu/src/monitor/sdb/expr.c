@@ -251,6 +251,11 @@ word_t eval(int level)
   if (type == TK_NOTYPE)
   {
     parse_index++;
+    if (parse_index > nr_token)
+    {
+      Log("parse index out of range");
+      return 0;
+    }
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
   }
@@ -261,10 +266,11 @@ word_t eval(int level)
 
   bool is_success = true;
 
+  parse_index++;
+
   switch (type)
   {
   case TK_NUM:
-    parse_index++;
     number_mode = *str == '0' ? ((*(str + 1) == 'x' || *(str + 1) == 'X') ? NUM_HEX : NUM_OCT) : NUM_DEC;
     switch (number_mode)
     {
@@ -290,7 +296,6 @@ word_t eval(int level)
       }
       break;
     case NUM_OCT:
-      parse_index++;
       for (char *p = str + 1; *p != '\0'; p++)
       {
         if (*p >= '0' && *p <= '7')
@@ -304,7 +309,6 @@ word_t eval(int level)
       }
       break;
     case NUM_DEC:
-      parse_index++;
       for (char *p = str; *p != '\0'; p++)
       {
         if (*p >= '0' && *p <= '9')
@@ -323,7 +327,6 @@ word_t eval(int level)
     }
     break;
   case TK_IDENT:
-    parse_index++;
     //  printf("identifier: %s\n", str);
     if (*str == '$')
     {
@@ -340,7 +343,6 @@ word_t eval(int level)
     }
     break;
   case TK_LPAREN:
-    parse_index++;
     lval = eval(TK_ADD);
     if (tokens[parse_index].type != TK_RPAREN)
     {
@@ -373,26 +375,32 @@ word_t eval(int level)
 
   word_t rval = 0;
 
+  parse_index++;
   while (type >= level)
   {
     switch (type)
     {
     case TK_ADD:
-      parse_index++;
       rval = eval(TK_MUL);
       lval += rval;
     case TK_SUB:
-      parse_index++;
       rval = eval(TK_MUL);
       lval -= rval;
     case TK_MUL:
-      parse_index++;
       rval = eval(TK_GT);
       lval *= rval;
     case TK_DIV:
-      parse_index++;
       rval = eval(TK_GT);
       lval /= rval;
+    }
+    type = tokens[parse_index].type;
+    str = tokens[parse_index].str;
+
+    if (type == TK_NOTYPE)
+    {
+      parse_index++;
+      type = tokens[parse_index].type;
+      str = tokens[parse_index].str;
     }
   }
 
