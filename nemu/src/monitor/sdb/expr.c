@@ -194,6 +194,16 @@ void get_token_str(int i, char *str) {
   }
 }
 
+int parse_index = 0;
+
+// word_t evaluate(int level) {
+//   if (parse_index >= nr_token) {
+//     printf("parse index out of range\n");
+//     return 0;
+//   }
+
+  
+// }
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -204,6 +214,9 @@ word_t expr(char *e, bool *success) {
   char str[44];
 
   for (int i = 0; i < nr_token; i ++) {
+    if (tokens[i].type == TK_NOTYPE) {
+      continue;
+    }
     get_token_str(i, str);
     printf("token %d: type = %s, str = %s\n", i, str, tokens[i].str);
   }
