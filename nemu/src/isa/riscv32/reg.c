@@ -46,5 +46,5 @@ word_t isa_reg_str2val(const char *s, bool *success) {
   }
   printf("isa_reg_str2val: %s -> 0x%08x\n", s, val);
   *success = (val < 32);
-  return success ? gpr(val) : 0;
+  return *success ? gpr(val) : 0;
 }
