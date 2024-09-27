@@ -413,6 +413,7 @@ word_t eval(int level)
       lval *= rval;
       break;
     case TK_DIV:
+      Log("lval = %d, div rval = %d\n", lval, rval);
       rval = eval(TK_GT);
       lval /= rval;
       break;
