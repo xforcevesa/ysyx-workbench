@@ -353,7 +353,7 @@ word_t eval(int level)
   }
   if (error)
   {
-    Log("parse error internal 1");
+    Log("parse error internal 1, lval = %d", lval);
     return -1;
   }
 
