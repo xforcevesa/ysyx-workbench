@@ -38,13 +38,13 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", TK_ADD},         // plus
+  {"+", TK_ADD},         // plus
   {"==", TK_EQ},        // equal
-  {"\\*", TK_MUL},         // asterisk
-  {"\\/", TK_DIV},           // slash
-  {"\\%", TK_MOD},          // percent
-  {"\\>", TK_GT},          // greater than
-  {"\\<", TK_LT},          // less than
+  {"*", TK_MUL},         // asterisk
+  {"/", TK_DIV},           // slash
+  {"%", TK_MOD},          // percent
+  {">", TK_GT},          // greater than
+  {"<", TK_LT},          // less than
   {">=", TK_GE},         // greater than or equal to
   {"<=", TK_LE},         // less than or equal to
 };
