@@ -398,15 +398,45 @@ word_t eval(int level)
     case TK_ADD:
       rval = eval(TK_MUL);
       lval += rval;
+      break;
     case TK_SUB:
       rval = eval(TK_MUL);
       lval -= rval;
+      break;
     case TK_MUL:
       rval = eval(TK_GT);
       lval *= rval;
+      break;
     case TK_DIV:
       rval = eval(TK_GT);
       lval /= rval;
+      break;
+    case TK_MOD:
+      rval = eval(TK_GT);
+      lval %= rval;
+      break;
+    case TK_GT:
+      rval = eval(TK_NUM);
+      lval = (lval > rval) ? 1 : 0;
+      break;
+    case TK_LT:
+      rval = eval(TK_NUM);
+      lval = (lval < rval) ? 1 : 0;
+      break;
+    case TK_GE:
+      rval = eval(TK_NUM);
+      lval = (lval >= rval) ? 1 : 0;
+      break;
+    case TK_LE:
+      rval = eval(TK_NUM);
+      lval = (lval <= rval) ? 1 : 0;
+      break;
+    case TK_EQ:
+      rval = eval(TK_NUM);
+      lval = (lval == rval) ? 1 : 0;
+      break;
+    default:
+      break;
     }
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
