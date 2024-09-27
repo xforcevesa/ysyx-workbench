@@ -268,6 +268,11 @@ word_t eval(int level)
 
   parse_index++;
 
+  if (parse_index > nr_token) {
+    Log("parse index out of range");
+    return 0;
+  }
+
   switch (type)
   {
   case TK_NUM:
@@ -376,6 +381,10 @@ word_t eval(int level)
   word_t rval = 0;
 
   parse_index++;
+  if (parse_index > nr_token) {
+    Log("parse index out of range");
+    return 0;
+  }
   while (type >= level && parse_index < nr_token)
   {
     switch (type)
