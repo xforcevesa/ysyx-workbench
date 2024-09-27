@@ -385,7 +385,7 @@ word_t eval(int level)
   if (parse_index > nr_token)
   {
     Log("parse index out of range");
-    return 0;
+    return lval;
   }
 
   while (type >= level && parse_index <= nr_token)
