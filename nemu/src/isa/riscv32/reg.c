@@ -47,5 +47,5 @@ word_t isa_reg_str2val(const char *s, bool *success) {
   if (success) {
     *success = (val < 32);
   }
-  return val;
+  return gpr(val);
 }
