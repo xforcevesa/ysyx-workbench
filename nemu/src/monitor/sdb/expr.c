@@ -394,6 +394,9 @@ word_t eval(int level)
     get_token_str(parse_index, str2);
     Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
     parse_index++;
+    if (type == TK_LPAREN) {
+      break;
+    }
     switch (type)
     {
     case TK_ADD:
