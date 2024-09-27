@@ -227,9 +227,320 @@ int parse_index = 0;
 
 int error = false;
 
+// word_t eval(int level)
+// {
+
+//   if (error)
+//   {
+//     return -1;
+//   }
+
+//   if (parse_index > nr_token)
+//   {
+//     Log("parse index out of range");
+//     return 0;
+//   }
+
+//   enum
+//   {
+//     NUM_HEX,
+//     NUM_OCT,
+//     NUM_DEC
+//   } number_mode;
+
+//   int type = tokens[parse_index].type;
+//   char *str = tokens[parse_index].str;
+
+//   if (type == TK_NOTYPE)
+//   {
+//     parse_index++;
+//     if (parse_index > nr_token)
+//     {
+//       Log("parse index out of range");
+//       return 0;
+//     }
+//     type = tokens[parse_index].type;
+//     str = tokens[parse_index].str;
+//   }
+
+//   Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
+
+//   word_t lval = 0;
+
+//   bool is_success = true;
+
+//   parse_index++;
+
+//   if (parse_index > nr_token)
+//   {
+//     Log("parse index out of range");
+//     return 0;
+//   }
+
+//   switch (type)
+//   {
+//   case TK_NUM:
+//     number_mode = *str == '0' ? ((*(str + 1) == 'x' || *(str + 1) == 'X') ? NUM_HEX : NUM_OCT) : NUM_DEC;
+//     switch (number_mode)
+//     {
+//     case NUM_HEX:
+//       for (char *p = str + 2; *p != '\0'; p++)
+//       {
+//         if (*p >= '0' && *p <= '9')
+//         {
+//           lval = (lval << 4) + (*p - '0');
+//         }
+//         else if (*p >= 'a' && *p <= 'f')
+//         {
+//           lval = (lval << 4) + (*p - 'a' + 10);
+//         }
+//         else if (*p >= 'A' && *p <= 'F')
+//         {
+//           lval = (lval << 4) + (*p - 'A' + 10);
+//         }
+//         else
+//         {
+//           error = true;
+//         }
+//       }
+//       break;
+//     case NUM_OCT:
+//       for (char *p = str + 1; *p != '\0'; p++)
+//       {
+//         if (*p >= '0' && *p <= '7')
+//         {
+//           lval = (lval << 3) + (*p - '0');
+//         }
+//         else
+//         {
+//           error = true;
+//         }
+//       }
+//       break;
+//     case NUM_DEC:
+//       for (char *p = str; *p != '\0'; p++)
+//       {
+//         if (*p >= '0' && *p <= '9')
+//         {
+//           lval = lval * 10 + (*p - '0');
+//         }
+//         else
+//         {
+//           Log("invalid character in number: %c", *p);
+//           error = true;
+//         }
+//       }
+//       break;
+//     default:
+//       break;
+//     }
+//     break;
+//   case TK_IDENT:
+//     //  printf("identifier: %s\n", str);
+//     if (*str == '$')
+//     {
+//       is_success = true;
+//       lval = isa_reg_str2val(str + 1, &is_success);
+//       if (!is_success)
+//       {
+//         error = true;
+//       }
+//     }
+//     else
+//     {
+//       error = true;
+//     }
+//     break;
+//   case TK_LPAREN:
+//     lval = eval(TK_ADD);
+//     if (tokens[parse_index].type != TK_RPAREN)
+//     {
+//       Log("missing right parenthesis");
+//       error = true;
+//     }
+//     parse_index++;
+//     break;
+//   default:
+//     break;
+//   }
+//   if (error)
+//   {
+//     Log("parse error internal 1, lval = %d", lval);
+//     return -1;
+//   }
+
+//   type = tokens[parse_index].type;
+//   str = tokens[parse_index].str;
+
+//   if (type == TK_NOTYPE && (parse_index + 1) < nr_token)
+//   {
+//     parse_index++;
+//     type = tokens[parse_index].type;
+//     str = tokens[parse_index].str;
+//   }
+
+//   word_t rval = 0;
+
+//   // parse_index++;
+//   if (parse_index > nr_token)
+//   {
+//     Log("parse index out of range");
+//     return lval;
+//   }
+
+//   while (type >= level && parse_index <= nr_token)
+//   {
+//     char str2[44];
+//     get_token_str(parse_index, str2);
+//     Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
+//     parse_index++;
+//     if (type == TK_RPAREN) {
+//       parse_index--;
+//       break;
+//     }
+//     switch (type)
+//     {
+//     case TK_ADD:
+//       rval = eval(TK_MUL);
+//       Log("lval = %d, add rval = %d\n", lval, rval);
+//       lval += rval;
+//       break;
+//     case TK_SUB:
+//       rval = eval(TK_MUL);
+//       lval -= rval;
+//       break;
+//     case TK_MUL:
+//       rval = eval(TK_GT);
+//       lval *= rval;
+//       break;
+//     case TK_DIV:
+//       Log("lval = %d, div rval = %d\n", lval, rval);
+//       rval = eval(TK_GT);
+//       lval /= rval;
+//       break;
+//     case TK_MOD:
+//       rval = eval(TK_GT);
+//       lval %= rval;
+//       break;
+//     case TK_GT:
+//       rval = eval(TK_NUM);
+//       lval = (lval > rval) ? 1 : 0;
+//       break;
+//     case TK_LT:
+//       rval = eval(TK_NUM);
+//       lval = (lval < rval) ? 1 : 0;
+//       break;
+//     case TK_GE:
+//       rval = eval(TK_NUM);
+//       lval = (lval >= rval) ? 1 : 0;
+//       break;
+//     case TK_LE:
+//       rval = eval(TK_NUM);
+//       lval = (lval <= rval) ? 1 : 0;
+//       break;
+//     case TK_EQ:
+//       rval = eval(TK_NUM);
+//       lval = (lval == rval) ? 1 : 0;
+//       break;
+//     default:
+//       break;
+//     }
+//     type = tokens[parse_index].type;
+//     str = tokens[parse_index].str;
+
+//     while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
+//     {
+//       parse_index++;
+//       type = tokens[parse_index].type;
+//       str = tokens[parse_index].str;
+//     }
+//   }
+
+//   return lval;
+// }
+
+void next_token()
+{
+  parse_index++;
+}
+
+word_t parse_hex(char *str)
+{
+  word_t val = 0;
+  for (char *p = str; *p != '\0'; p++)
+  {
+    if (*p >= '0' && *p <= '9')
+    {
+      val = (val << 4) + (*p - '0');
+    }
+    else if (*p >= 'a' && *p <= 'f')
+    {
+      val = (val << 4) + (*p - 'a' + 10);
+    }
+    else if (*p >= 'A' && *p <= 'F')
+    {
+      val = (val << 4) + (*p - 'A' + 10);
+    }
+    else
+    {
+      Log("invalid character in hex number: %c", *p);
+      return 0;
+    }
+  }
+  return val;
+}
+
+word_t parse_num(char *str)
+{
+  word_t val = 0;
+  for (char *p = str; *p != '\0'; p++)
+  {
+    if (*p >= '0' && *p <= '9')
+    {
+      val = val * 10 + (*p - '0');
+    }
+    else
+    {
+      Log("invalid character in number: %c", *p);
+      return 0;
+    }
+  }
+  return val;
+}
+
+word_t parse_oct(char *str)
+{
+  word_t val = 0;
+  for (char *p = str; *p != '\0'; p++)
+  {
+    if (*p >= '0' && *p <= '7')
+    {
+      val = (val << 3) + (*p - '0');
+    }
+    else
+    {
+      Log("invalid character in octal number: %c", *p);
+      return 0;
+    }
+  }
+  return val;
+}
+
+word_t parse_reg(char *str)
+{
+  if (*str == '$')
+  {
+    return isa_reg_str2val(str + 1, NULL);
+  }
+  else
+  {
+    Log("invalid register name: %s", str);
+    return 0;
+  }
+}
+
 word_t eval(int level)
 {
-
   if (error)
   {
     return -1;
@@ -251,9 +562,9 @@ word_t eval(int level)
   int type = tokens[parse_index].type;
   char *str = tokens[parse_index].str;
 
-  if (type == TK_NOTYPE)
+  while (type == TK_NOTYPE)
   {
-    parse_index++;
+    next_token();
     if (parse_index > nr_token)
     {
       Log("parse index out of range");
@@ -267,9 +578,9 @@ word_t eval(int level)
 
   word_t lval = 0;
 
-  bool is_success = true;
+  // bool is_success = true;
 
-  parse_index++;
+  next_token();
 
   if (parse_index > nr_token)
   {
@@ -284,52 +595,13 @@ word_t eval(int level)
     switch (number_mode)
     {
     case NUM_HEX:
-      for (char *p = str + 2; *p != '\0'; p++)
-      {
-        if (*p >= '0' && *p <= '9')
-        {
-          lval = (lval << 4) + (*p - '0');
-        }
-        else if (*p >= 'a' && *p <= 'f')
-        {
-          lval = (lval << 4) + (*p - 'a' + 10);
-        }
-        else if (*p >= 'A' && *p <= 'F')
-        {
-          lval = (lval << 4) + (*p - 'A' + 10);
-        }
-        else
-        {
-          error = true;
-        }
-      }
+      lval = parse_hex(str + 2);
       break;
     case NUM_OCT:
-      for (char *p = str + 1; *p != '\0'; p++)
-      {
-        if (*p >= '0' && *p <= '7')
-        {
-          lval = (lval << 3) + (*p - '0');
-        }
-        else
-        {
-          error = true;
-        }
-      }
+      lval = parse_oct(str + 1);
       break;
     case NUM_DEC:
-      for (char *p = str; *p != '\0'; p++)
-      {
-        if (*p >= '0' && *p <= '9')
-        {
-          lval = lval * 10 + (*p - '0');
-        }
-        else
-        {
-          Log("invalid character in number: %c", *p);
-          error = true;
-        }
-      }
+      lval = parse_num(str);
       break;
     default:
       break;
@@ -339,15 +611,12 @@ word_t eval(int level)
     //  printf("identifier: %s\n", str);
     if (*str == '$')
     {
-      is_success = true;
-      lval = isa_reg_str2val(str + 1, &is_success);
-      if (!is_success)
-      {
-        error = true;
-      }
+      // is_success = true;
+      lval = parse_reg(str);
     }
     else
     {
+      Log("invalid identifier: %s", str);
       error = true;
     }
     break;
@@ -358,9 +627,11 @@ word_t eval(int level)
       Log("missing right parenthesis");
       error = true;
     }
-    parse_index++;
+    next_token();
     break;
   default:
+    Log("invalid token: %d, %s", type, str);
+    error = true;
     break;
   }
   if (error)
@@ -372,16 +643,15 @@ word_t eval(int level)
   type = tokens[parse_index].type;
   str = tokens[parse_index].str;
 
-  if (type == TK_NOTYPE && (parse_index + 1) < nr_token)
+  while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
   {
-    parse_index++;
+    next_token();
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
   }
 
   word_t rval = 0;
 
-  // parse_index++;
   if (parse_index > nr_token)
   {
     Log("parse index out of range");
@@ -393,10 +663,9 @@ word_t eval(int level)
     char str2[44];
     get_token_str(parse_index, str2);
     Log("In while: level = %d, parse_index = %d, type = %s, str = %s", level, parse_index, str2, str);
-    parse_index++;
+    next_token();
     if (type == TK_RPAREN) {
-      parse_index--;
-      break;
+      
     }
     switch (type)
     {
@@ -443,6 +712,8 @@ word_t eval(int level)
       lval = (lval == rval) ? 1 : 0;
       break;
     default:
+      Log("invalid token: %d, %s", type, str);
+      error = true;
       break;
     }
     type = tokens[parse_index].type;
@@ -450,7 +721,7 @@ word_t eval(int level)
 
     while (type == TK_NOTYPE && (parse_index + 1) <= nr_token)
     {
-      parse_index++;
+      next_token();
       type = tokens[parse_index].type;
       str = tokens[parse_index].str;
     }
