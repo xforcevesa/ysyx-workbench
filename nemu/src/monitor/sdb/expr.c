@@ -260,7 +260,7 @@ word_t eval(int level)
     str = tokens[parse_index].str;
   }
 
-  Log("level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
+  Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
 
   word_t lval = 0;
 
