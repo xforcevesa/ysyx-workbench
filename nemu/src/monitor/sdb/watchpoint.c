@@ -22,6 +22,7 @@ typedef struct watchpoint {
   struct watchpoint *next;
 
   /* TODO: Add more members if necessary */
+  wchar_t addr;
 
 } WP;
 
@@ -39,5 +40,26 @@ void init_wp_pool() {
   free_ = wp_pool;
 }
 
+WP* new_wp();
+void free_wp(WP *wp);
+
 /* TODO: Implement the functionality of watchpoint */
+
+WP* new_wp() {
+  if (free_ == NULL) {
+    return NULL;
+  }
+
+  WP *wp = free_;
+  free_ = wp->next;
+  wp->next = head;
+  head = wp;
+
+  return wp;
+}
+
+void free_wp(WP *wp) {
+  wp->next = free_;
+  free_ = wp;
+}
 

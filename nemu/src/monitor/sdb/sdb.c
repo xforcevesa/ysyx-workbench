@@ -47,9 +47,48 @@ static int cmd_c(char *args) {
   return 0;
 }
 
+static int cmd_si(char *args) {
+  uint64_t a = 0;
+  for (; args && *args; args++) {
+    if (*args >= '0' && *args <= '9') {
+      a = a * 10 + (*args - '0');
+    } else {
+      break;
+    }
+  }
+  if (a == 0) {
+    a = 1;
+  }
+  cpu_exec(a);
+  return 0;
+}
+
+static int cmd_info(char *args) {
+  for (; args && *args; args++) {
+    switch (*args) {
+      case 'r':
+        isa_reg_display();
+        break;
+      case 'w':
+        break;
+      default:
+        break;
+    }
+  }
+  return 0;
+}
 
 static int cmd_q(char *args) {
   return -1;
+}
+
+static int cmd_p(char *args) {
+  bool success;
+  word_t a = expr(args, &success);
+  if (success) {
+    printf("expression: %d\n", a);
+  }
+  return 0;
 }
 
 static int cmd_help(char *args);
@@ -62,6 +101,9 @@ static struct {
   { "help", "Display information about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Single-step the execution of the program at the given number of cycles", cmd_si },
+  { "info", "Display information about the system", cmd_info },
+  { "p", "Evaluate an expression and display the result", cmd_p }
 
   /* TODO: Add more commands */
 
