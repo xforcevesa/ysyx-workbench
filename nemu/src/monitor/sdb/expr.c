@@ -201,6 +201,11 @@ int parse_index = 0;
 int error = false;
 
 word_t eval(int level) {
+
+  if (error) {
+    return -1;
+  }
+
   printf("level = %d, parse_index = %d, nr_token = %d\n", level, parse_index, nr_token);
   if (parse_index > nr_token) {
     printf("parse index out of range\n");
@@ -310,7 +315,12 @@ word_t expr(char *e, bool *success) {
 
   /* TODO: Insert codes to evaluate the expression. */
   // TODO();
-  printf("parsed value: %d\n", eval(TK_ADD));
+  int res = eval(TK_ADD);
+  if (error) {
+    printf("parsed value: %d\n", res);
+  } else {
+    printf("parse error\n");
+  }
 
   return 0;
 }
