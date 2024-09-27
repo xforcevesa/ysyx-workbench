@@ -401,7 +401,7 @@ word_t eval(int level)
     {
     case TK_ADD:
       rval = eval(TK_MUL);
-      printf("lval = %d, add rval = %d\n", lval, rval);
+      Log("lval = %d, add rval = %d\n", lval, rval);
       lval += rval;
       break;
     case TK_SUB:
