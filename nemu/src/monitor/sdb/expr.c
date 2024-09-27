@@ -466,7 +466,7 @@ void next_token(const char* file, int line)
   Log("NEXT_TOKEN %s:%d parse_index = %d, type_str = %s, str = %s", file, line, parse_index, str, tokens[parse_index].str);
   parse_index++;
   get_token_str(parse_index, str);
-  Log("NEXT_TOKEN %d: parse_index = %d, type_str = %s, str = %s", line, parse_index, str, tokens[parse_index].str);
+  Log("NEXT_TOKEN %s:%d parse_index = %d, type_str = %s, str = %s", file, line, parse_index, str, tokens[parse_index].str);
 }
 
 #define next_token() next_token(__FILE__, __LINE__)
