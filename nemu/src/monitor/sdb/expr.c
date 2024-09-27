@@ -221,6 +221,12 @@ word_t eval(int level) {
   int type = tokens[parse_index].type;
   char* str = tokens[parse_index].str;
 
+  if (type == TK_NOTYPE) {
+    parse_index ++;
+    type = tokens[parse_index].type;
+    str = tokens[parse_index].str;
+  }
+
   word_t lval = 0;
 
   bool is_success = true;
@@ -245,6 +251,7 @@ word_t eval(int level) {
         }
         break;
        case NUM_OCT:
+     parse_index ++;
         for (char* p = str + 1; *p != '\0'; p ++) {
           if (*p >= '0' && *p <= '7') {
             lval = (lval << 3) + (*p - '0');
@@ -254,6 +261,7 @@ word_t eval(int level) {
         }
         break;
        case NUM_DEC:
+     parse_index ++;
         for (char* p = str; *p != '\0'; p ++) {
           if (*p >= '0' && *p <= '9') {
             lval = lval * 10 + (*p - '0');
@@ -274,6 +282,8 @@ word_t eval(int level) {
       if (!is_success) {
         error = true;
       }
+     } else {
+      error = true;
      }
      break;
     case TK_LPAREN:
@@ -291,8 +301,36 @@ word_t eval(int level) {
   if (error) {
     return -1;
   }
-  return lval;
   
+  type = tokens[parse_index].type;
+  str = tokens[parse_index].str;
+
+  if (type == TK_NOTYPE) {
+    parse_index ++;
+    type = tokens[parse_index].type;
+    str = tokens[parse_index].str;
+  }
+
+  word_t rval = 0;
+
+  while (type >= level) {
+    switch (type) {
+      case TK_ADD:
+        parse_index ++;
+        rval = eval(TK_MUL);
+        lval += rval;
+      case TK_SUB:
+        parse_index ++;
+        rval = eval(TK_MUL);
+        lval -= rval;
+      case TK_MUL:
+        parse_index ++;
+        rval = eval(TK_GT);
+        lval += rval;
+    }
+  }
+
+  return lval;
 }
 
 word_t expr(char *e, bool *success) {
