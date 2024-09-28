@@ -10,3 +10,7 @@
 !README.md
 !.gitignore
 !init.sh
+!/pre-learning/*/*
+/am-kernels
+/fceux-am
+/nvboard
