@@ -167,7 +167,7 @@ static bool make_token(char *e)
   return true;
 }
 
-void get_token_str(int i, char *str)
+static void get_token_str(int i, char *str)
 {
   if (i >= nr_token)
   {
@@ -227,11 +227,11 @@ void get_token_str(int i, char *str)
   }
 }
 
-int parse_index = 0;
+static int parse_index = 0;
 
-int error = false;
+static int error = false;
 
-word_t eval(int level)
+static word_t eval(int level)
 {
 
   if (error)
