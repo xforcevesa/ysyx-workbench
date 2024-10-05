@@ -59,6 +59,7 @@ static int cmd_x(char *args)
   char *baseaddr = strtok(NULL, " ");
   int len = 0;
   paddr_t addr = 0;
+  // Probably cause segmentation fault
   sscanf(n, "%d", &len);
   sscanf(baseaddr, "%x", &addr);
   for (int i = 0; i < len; i++)
@@ -158,15 +159,17 @@ static struct
     {"help", "Display information about all supported commands", cmd_help},
     {"c", "Continue the execution of the program", cmd_c},
     {"q", "Exit NEMU", cmd_q},
+
+    /* TODO: Add more commands */
     {"si", "Single-step the execution of the program at the given number of cycles", cmd_si},
     {"info", "Display information about the system", cmd_info},
     {"p", "Evaluate an expression and display the result", cmd_p},
+    // Probably cause segmentation fault
     {"x", "Read memory content", cmd_x},
+    // Probably cause segmentation fault
     {"w", "Create a watchpoint", cmd_w},
+    // Probably cause segmentation fault
     {"d", "Delete a watchpoint", cmd_d},
-
-    /* TODO: Add more commands */
-
 };
 
 #define NR_CMD ARRLEN(cmd_table)
