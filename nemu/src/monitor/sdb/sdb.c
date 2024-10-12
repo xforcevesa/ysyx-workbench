@@ -224,6 +224,16 @@ static int cmd_rexp(char *args)
   gen_rand_expr(buff, &len, &depth);
   buff[len] = '\0';
   printf("Random expression: %s\n", buff);
+  bool success;
+  word_t a = expr(buff, &success);
+  if (success)
+  {
+    printf("expression: %d\n", a);
+  }
+  else
+  {
+    printf("Invalid expression.\n");
+  }
   return 0;
 }
 
