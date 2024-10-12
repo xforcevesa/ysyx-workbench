@@ -137,7 +137,7 @@ static int cmd_q(char *args)
   return -1;
 }
 
-#define buff_max_size 65536
+#define buff_max_size 655360
 
 static int rand_choose_3(int first, int second, int third)
 {
@@ -202,7 +202,7 @@ static void gen_rand_expr(char* buff, int* len, int* depth)
 
   if (*len * 1.16 > buff_max_size * 1.0) {
     first *= 10;
-  } else if ((buff_max_size - *len < 30) || (*depth > 30)) {
+  } else if ((buff_max_size - *len < 30) || (*depth > 300)) {
     second = 0;
     third = 0;
   }
