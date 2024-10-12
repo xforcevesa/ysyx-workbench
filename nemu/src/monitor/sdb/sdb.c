@@ -228,7 +228,7 @@ static int cmd_rexp(char *args)
   printf("Random expression: %s\n", buff);
   if (success)
   {
-    printf("expression: %d\n", a);
+    printf("Evaluated expression: %d\n", a);
   }
   else
   {
