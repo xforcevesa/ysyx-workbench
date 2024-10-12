@@ -427,7 +427,7 @@ static word_t eval(int level)
       rval = eval(TK_GT);
       if (rval == 0)
       {
-        Log("division by zero");
+        Log("DIVISION BY ZERO!!!!");
         error = true;
         return -1;
       }
