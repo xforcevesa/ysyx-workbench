@@ -194,9 +194,9 @@ static void gen_rand_op(char* buff, int* len)
 
 static void gen_rand_expr(char* buff, int* len, int* depth)
 {
-  int first = 8;
-  int second = 5;
-  int third = 9;
+  int first = 5;
+  int second = 6;
+  int third = 11;
 
   (*depth)++;
 
