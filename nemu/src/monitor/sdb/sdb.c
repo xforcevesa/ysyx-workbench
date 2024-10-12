@@ -213,6 +213,7 @@ static void gen_rand_expr(char* buff, int* len)
 
 static int cmd_rexp(char *args)
 {
+  srand(time(NULL));
   static char buff[buff_max_size];
   #undef buff_max_size
   int len = 0;
