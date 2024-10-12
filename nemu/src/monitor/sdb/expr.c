@@ -425,6 +425,11 @@ static word_t eval(int level)
     case TK_DIV:
       Log("lval = %d, div rval = %d\n", lval, rval);
       rval = eval(TK_GT);
+      if (rval == 0)
+      {
+        error = true;
+        return -1;
+      }
       lval /= rval;
       break;
     case TK_MOD:
@@ -453,6 +458,11 @@ static word_t eval(int level)
       break;
     default:
       break;
+    }
+    if (error)
+    {
+      Log("parse error internal 2, lval = %d", lval);
+      return -1;
     }
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
