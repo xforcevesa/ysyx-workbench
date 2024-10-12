@@ -223,9 +223,9 @@ static int cmd_rexp(char *args)
   int depth = 0;
   gen_rand_expr(buff, &len, &depth);
   buff[len] = '\0';
-  printf("Random expression: %s\n", buff);
   bool success;
   word_t a = expr(buff, &success);
+  printf("Random expression: %s\n", buff);
   if (success)
   {
     printf("expression: %d\n", a);
