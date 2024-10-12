@@ -471,6 +471,7 @@ static word_t eval(int level)
 word_t expr(char *e, bool *success)
 {
   parse_index = 0;
+  nr_token = 0;
   error = false;
   if (!make_token(e))
   {
