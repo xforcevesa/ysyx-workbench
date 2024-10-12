@@ -137,7 +137,7 @@ static int cmd_q(char *args)
   return -1;
 }
 
-#define buff_max_size 655360
+#define buff_max_size 262144
 
 static int rand_choose_3(int first, int second, int third)
 {
