@@ -192,22 +192,24 @@ static void gen_rand_op(char* buff, int* len)
   }
 }
 
-static void gen_rand_expr(char* buff, int* len)
+static void gen_rand_expr(char* buff, int* len, int* depth)
 {
-  int first = 7;
+  int first = 3;
   int second = 3;
   int third = 3;
 
+  (*depth)++;
+
   if (*len * 1.16 > buff_max_size * 1.0) {
     first *= 100;
-  } else if (buff_max_size - *len < 30) {
+  } else if ((buff_max_size - *len < 30) || (*depth > 6)) {
     second = 0;
     third = 0;
   }
   switch (rand_choose_3(first, second, third)) {
     case 0: gen_num(buff, len); break;
-    case 1: gen('(', buff, len); gen_rand_expr(buff, len); gen(')', buff, len); break;
-    default: gen_rand_expr(buff, len); gen_rand_op(buff, len); gen_rand_expr(buff, len); break;
+    case 1: gen('(', buff, len); gen_rand_expr(buff, len, depth); gen(')', buff, len); break;
+    default: gen_rand_expr(buff, len, depth); gen_rand_op(buff, len); gen_rand_expr(buff, len, depth); break;
   }
 }
 
@@ -217,7 +219,8 @@ static int cmd_rexp(char *args)
   static char buff[buff_max_size];
   #undef buff_max_size
   int len = 0;
-  gen_rand_expr(buff, &len);
+  int depth = 0;
+  gen_rand_expr(buff, &len, &depth);
   buff[len] = '\0';
   printf("Random expression: %s\n", buff);
   return 0;
