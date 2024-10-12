@@ -137,6 +137,91 @@ static int cmd_q(char *args)
   return -1;
 }
 
+#define buff_max_size 65536
+
+static int rand_choose_3(int first, int second, int third)
+{
+  double first_rate = (double)first / (first + second + third);
+  double second_rate = (double)second / (first + second + third);
+
+  double rand_num = rand() / (double)RAND_MAX;
+  if (rand_num < first_rate)
+    return 1;
+  else if (rand_num < first_rate + second_rate)
+    return 2;
+  else
+    return 3;
+}
+
+static int rand_choose_4(int first, int second, int third, int fourth)
+{
+  double first_rate = (double)first / (first + second + third + fourth);
+  double second_rate = (double)second / (first + second + third + fourth);
+  double third_rate = (double)third / (first + second + third + fourth);
+
+  double rand_num = rand() / (double)RAND_MAX;
+  if (rand_num < first_rate)
+    return 1;
+  else if (rand_num < first_rate + second_rate)
+    return 2;
+  else if (rand_num < first_rate + second_rate + third_rate)
+    return 3;
+  else
+    return 4;
+}
+
+static void gen_num(char* buff, int* len)
+{
+  int num = rand() % 1000000;
+  (*len) += sprintf(buff + *len, "%d", num);
+}
+
+static void gen(char c, char* buff, int* len)
+{
+  buff[*len] = c;
+  (*len)++;
+}
+
+static void gen_rand_op(char* buff, int* len)
+{
+  switch (rand_choose_4(4, 4, 4, 4)) {
+    case 4: gen('+', buff, len); break;
+    case 1: gen('-', buff, len); break;
+    case 2: gen('*', buff, len); break;
+    case 3: gen('/', buff, len); break;
+  }
+}
+
+static void gen_rand_expr(char* buff, int* len)
+{
+  int first = 3;
+  int second = 3;
+  int third = 3;
+
+  if (*len * 1.16 > buff_max_size * 1.0) {
+    first *= 100;
+  } else if (buff_max_size - *len < 30) {
+    second = 0;
+    third = 0;
+  }
+  switch (rand_choose_3(first, second, third)) {
+    case 0: gen_num(buff, len); break;
+    case 1: gen('(', buff, len); gen_rand_expr(buff, len); gen(')', buff, len); break;
+    default: gen_rand_expr(buff, len); gen_rand_op(buff, len); gen_rand_expr(buff, len); break;
+  }
+}
+
+static int cmd_rexp(char *args)
+{
+  static char buff[buff_max_size];
+  #undef buff_max_size
+  int len = 0;
+  gen_rand_expr(buff, &len);
+  buff[len] = '\0';
+  printf("Random expression: %s\n", buff);
+  return 0;
+}
+
 static int cmd_p(char *args)
 {
   bool success;
@@ -170,6 +255,8 @@ static struct
     {"w", "Create a watchpoint", cmd_w},
     // Probably cause segmentation fault
     {"d", "Delete a watchpoint", cmd_d},
+    // Generate random expression
+    {"rexp", "Generate a random expression", cmd_rexp},
 };
 
 #define NR_CMD ARRLEN(cmd_table)
