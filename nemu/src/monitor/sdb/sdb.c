@@ -185,10 +185,10 @@ static void gen(char c, char* buff, int* len)
 static void gen_rand_op(char* buff, int* len)
 {
   switch (rand_choose_4(40, 40, 40, 4)) {
-    case 4: gen('+', buff, len); break;
-    case 1: gen('-', buff, len); break;
-    case 2: gen('*', buff, len); break;
-    case 3: gen('/', buff, len); break;
+    case 1: gen('+', buff, len); break;
+    case 2: gen('-', buff, len); break;
+    case 3: gen('*', buff, len); break;
+    case 4: gen('/', buff, len); break;
   }
 }
 
