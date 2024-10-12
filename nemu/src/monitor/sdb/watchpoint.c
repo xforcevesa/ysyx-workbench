@@ -123,6 +123,6 @@ extern void create_watchpoint(char *args)
   if (success)
     p->old_val = tmp;
   else
-    printf("创建watchpoint的时候expr求值出现问题\n");
+    printf("Failed to evaluate the expression when creating watchpoint\n");
   printf("Create watchpoint No.%d success.\n", p->NO);
 }

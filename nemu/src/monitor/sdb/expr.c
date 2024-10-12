@@ -103,7 +103,7 @@ typedef struct token
   char str[32];
 } Token;
 
-#define MAX_TOKENS 1024
+#define MAX_TOKENS 262144
 
 static Token tokens[MAX_TOKENS] __attribute__((used)) = {};
 static int nr_token __attribute__((used)) = 0;
@@ -425,6 +425,12 @@ static word_t eval(int level)
     case TK_DIV:
       Log("lval = %d, div rval = %d\n", lval, rval);
       rval = eval(TK_GT);
+      if (rval == 0)
+      {
+        Log("DIVISION BY ZERO!!!!");
+        error = true;
+        return -1;
+      }
       lval /= rval;
       break;
     case TK_MOD:
@@ -454,6 +460,11 @@ static word_t eval(int level)
     default:
       break;
     }
+    if (error)
+    {
+      Log("parse error internal 2, lval = %d", lval);
+      return -1;
+    }
     type = tokens[parse_index].type;
     str = tokens[parse_index].str;
 
@@ -471,6 +482,7 @@ static word_t eval(int level)
 word_t expr(char *e, bool *success)
 {
   parse_index = 0;
+  nr_token = 0;
   error = false;
   if (!make_token(e))
   {
