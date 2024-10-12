@@ -201,8 +201,8 @@ static void gen_rand_expr(char* buff, int* len, int* depth)
   (*depth)++;
 
   if (*len * 1.16 > buff_max_size * 1.0) {
-    first *= 100;
-  } else if ((buff_max_size - *len < 30) || (*depth > 6)) {
+    first *= 10;
+  } else if ((buff_max_size - *len < 30) || (*depth > 30)) {
     second = 0;
     third = 0;
   }
