@@ -80,6 +80,7 @@ static void trace_and_difftest(Decode *_this, vaddr_t dnpc)
         {
           nemu_state.state = NEMU_STOP;
           printf("NO EQ\n");
+          wp_pool[i].old_val = tmp;
           return;
         }
       }
