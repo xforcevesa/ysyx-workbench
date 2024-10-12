@@ -207,10 +207,11 @@ static void gen_rand_expr(char* buff, int* len, int* depth)
     third = 0;
   }
   switch (rand_choose_3(first, second, third)) {
-    case 0: gen_num(buff, len); break;
-    case 1: gen('(', buff, len); gen_rand_expr(buff, len, depth); gen(')', buff, len); break;
+    case 1: gen_num(buff, len); break;
+    case 2: gen('(', buff, len); gen_rand_expr(buff, len, depth); gen(')', buff, len); break;
     default: gen_rand_expr(buff, len, depth); gen_rand_op(buff, len); gen_rand_expr(buff, len, depth); break;
   }
+  (*depth)--;
 }
 
 static int cmd_rexp(char *args)
