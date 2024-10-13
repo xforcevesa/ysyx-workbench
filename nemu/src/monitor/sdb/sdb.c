@@ -259,7 +259,7 @@ static unsigned evaluate_expression(const char* expression, bool *success) {
     fclose(file);
 
     // Compile the generated C code using gcc
-    if (system("gcc -o temp_eval temp_eval.c") != 0) {
+    if (system("gcc -O0 -Wno-integer-overflow -o temp_eval temp_eval.c") != 0) {
         fprintf(stderr, "Compilation failed\n");
         return 0;
     }
