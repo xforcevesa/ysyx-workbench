@@ -237,6 +237,57 @@ static void gen_rand_expr(char *buff, int *len, int *depth)
   (*depth)--;
 }
 
+// Function to evaluate an unsigned expression
+static unsigned evaluate_expression(const char* expression, bool *success) {
+    // Create a temporary C file
+    FILE* file = fopen("temp_eval.c", "w");
+    if (!file) {
+        perror("Failed to create temporary file");
+        return 0;
+    }
+
+    // Write the C code into the temporary file
+    fprintf(file,
+        "#include <stdio.h>\n"
+        "int main() {\n"
+        "    unsigned result = 0;\n"
+        "    result = %s;\n"
+        "    printf(\"%%u\\n\", result);\n"
+        "    return 0;\n"
+        "}\n", expression);
+
+    fclose(file);
+
+    // Compile the generated C code using gcc
+    if (system("gcc -o temp_eval temp_eval.c") != 0) {
+        fprintf(stderr, "Compilation failed\n");
+        return 0;
+    }
+
+    // Run the compiled executable and capture the output
+    FILE* output = popen("./temp_eval", "r");
+    if (!output) {
+        perror("Failed to run compiled program");
+        return 0;
+    }
+
+    // Read the output result
+    unsigned result = 0;
+    if (fscanf(output, "%u", &result) != 1) {
+        // fprintf(stderr, "Failed to read result or division by zero occurred\n");
+        *success = 0;
+    } else {
+        *success = 1;
+    }
+
+    // Clean up
+    pclose(output);
+    remove("temp_eval.c");
+    remove("temp_eval");
+
+    return result;
+}
+
 static int cmd_rexp(char *args)
 {
   srand(time(NULL));
@@ -248,24 +299,38 @@ static int cmd_rexp(char *args)
       times = times * 10 + (*p - '0');
     }
   }
-  for (int i = 0; i < times; i++)
+  int passed = 0;
+  int i;
+  for (i = 0; i < times; i++)
   {
     int len = 0;
     int depth = 0;
     gen_rand_expr(buff, &len, &depth);
     buff[len] = '\0';
     bool success;
+    unsigned real_a = evaluate_expression(buff, &success);
+    if (!success)
+    {
+      i--; continue;
+    }
     word_t a = expr(buff, &success);
     printf("Random expression: %s\n", buff);
     if (success)
     {
-      printf("Evaluated expression %d: %d\n", i, a);
+      if (a != real_a)
+      {
+        printf("Error: Evaluated expression %d: %u, Real expression: %u\n", i, a, real_a);
+      } else {
+        printf("Correct: Evaluated expression %d: %u\n", i, a);
+        passed++;
+      }
     }
     else
     {
       printf("Invalid expression %d.\n", i);
     }
   }
+  printf("Passed: %d/%d\n", passed, times);
   return 0;
 }
 
