@@ -304,7 +304,7 @@ static int eval(int level)
         }
         else
         {
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -317,7 +317,7 @@ static int eval(int level)
         }
         else
         {
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -331,7 +331,7 @@ static int eval(int level)
         else
         {
           Log("invalid character in number: %c", *p);
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -347,12 +347,12 @@ static int eval(int level)
       lval = isa_reg_str2val(str + 1, &is_success);
       if (!is_success)
       {
-        error = true;
+        error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
       }
     }
     else
     {
-      error = true;
+      error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
     }
     break;
   case TK_LPAREN:
@@ -360,7 +360,7 @@ static int eval(int level)
     if (tokens[parse_index].type != TK_RPAREN)
     {
       Log("missing right parenthesis");
-      error = true;
+      error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
     }
     parse_index++;
     break;
@@ -428,7 +428,7 @@ static int eval(int level)
       if (rval == 0)
       {
         Log("DIVISION BY ZERO!!!!");
-        error = true;
+        error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         return -1;
       }
       lval /= rval;
@@ -486,6 +486,7 @@ word_t expr(char *e, bool *success)
   error = false;
   if (!make_token(e))
   {
+    printf("parse error: %s\n", e);
     *success = false;
     return 0;
   }
