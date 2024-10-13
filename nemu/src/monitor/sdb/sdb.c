@@ -249,6 +249,7 @@ static word_t evaluate_expression(const char* expression, bool *success) {
     // Write the C code into the temporary file
     fprintf(file,
         "#include <stdio.h>\n"
+        "#include <stdint.h>\n"
         "int main() {\n"
         "    uint32_t result = 0;\n"
         "    result = %s;\n"
