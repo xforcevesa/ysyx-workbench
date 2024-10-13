@@ -305,6 +305,7 @@ static int cmd_rexp(char *args)
   {
     int len = 0;
     int depth = 0;
+    printf("Random expression: %s\n", buff);
     gen_rand_expr(buff, &len, &depth);
     buff[len] = '\0';
     bool success;
