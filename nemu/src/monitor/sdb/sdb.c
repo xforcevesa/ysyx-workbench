@@ -137,7 +137,7 @@ static int cmd_q(char *args)
   return -1;
 }
 
-#define buff_max_size 262144
+#define buff_max_size 262
 
 static int rand_choose_3(int first, int second, int third)
 {
@@ -238,7 +238,7 @@ static void gen_rand_expr(char *buff, int *len, int *depth)
 }
 
 // Function to evaluate an unsigned expression
-static unsigned evaluate_expression(const char* expression, bool *success) {
+static word_t evaluate_expression(const char* expression, bool *success) {
     // Create a temporary C file
     FILE* file = fopen("temp_eval.c", "w");
     if (!file) {
@@ -250,7 +250,7 @@ static unsigned evaluate_expression(const char* expression, bool *success) {
     fprintf(file,
         "#include <stdio.h>\n"
         "int main() {\n"
-        "    unsigned result = 0;\n"
+        "    uint32_t result = 0;\n"
         "    result = %s;\n"
         "    printf(\"%%u\\n\", result);\n"
         "    return 0;\n"
