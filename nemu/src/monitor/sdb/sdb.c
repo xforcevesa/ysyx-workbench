@@ -308,6 +308,7 @@ static int cmd_rexp(char *args)
     gen_rand_expr(buff, &len, &depth);
     buff[len] = '\0';
     bool success;
+    printf("Random expression: %s\n", buff);
     unsigned real_a = evaluate_expression(buff, &success);
     if (!success)
     {
