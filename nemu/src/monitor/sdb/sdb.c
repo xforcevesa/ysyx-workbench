@@ -170,29 +170,38 @@ static int rand_choose_4(int first, int second, int third, int fourth)
     return 4;
 }
 
-static void gen_num(char* buff, int* len)
+static void gen_num(char *buff, int *len)
 {
   int num = rand() % 1000000;
   (*len) += sprintf(buff + *len, "%d", num);
 }
 
-static void gen(char c, char* buff, int* len)
+static void gen(char c, char *buff, int *len)
 {
   buff[*len] = c;
   (*len)++;
 }
 
-static void gen_rand_op(char* buff, int* len)
+static void gen_rand_op(char *buff, int *len)
 {
-  switch (rand_choose_4(40, 40, 40, 4)) {
-    case 1: gen('+', buff, len); break;
-    case 2: gen('-', buff, len); break;
-    case 3: gen('*', buff, len); break;
-    case 4: gen('/', buff, len); break;
+  switch (rand_choose_4(40, 40, 40, 4))
+  {
+  case 1:
+    gen('+', buff, len);
+    break;
+  case 2:
+    gen('-', buff, len);
+    break;
+  case 3:
+    gen('*', buff, len);
+    break;
+  case 4:
+    gen('/', buff, len);
+    break;
   }
 }
 
-static void gen_rand_expr(char* buff, int* len, int* depth)
+static void gen_rand_expr(char *buff, int *len, int *depth)
 {
   int first = 5;
   int second = 6;
@@ -200,16 +209,30 @@ static void gen_rand_expr(char* buff, int* len, int* depth)
 
   (*depth)++;
 
-  if (*len * 1.16 > buff_max_size * 1.0) {
+  if (*len * 1.16 > buff_max_size * 1.0)
+  {
     first *= 10;
-  } else if ((buff_max_size - *len < (20 + *depth * 2)) || (*depth > 25)) {
+  }
+  else if ((buff_max_size - *len < (20 + *depth * 2)) || (*depth > 25))
+  {
     second = 0;
     third = 0;
   }
-  switch (rand_choose_3(first, second, third)) {
-    case 1: gen_num(buff, len); break;
-    case 2: gen('(', buff, len); gen_rand_expr(buff, len, depth); gen(')', buff, len); break;
-    default: gen_rand_expr(buff, len, depth); gen_rand_op(buff, len); gen_rand_expr(buff, len, depth); break;
+  switch (rand_choose_3(first, second, third))
+  {
+  case 1:
+    gen_num(buff, len);
+    break;
+  case 2:
+    gen('(', buff, len);
+    gen_rand_expr(buff, len, depth);
+    gen(')', buff, len);
+    break;
+  default:
+    gen_rand_expr(buff, len, depth);
+    gen_rand_op(buff, len);
+    gen_rand_expr(buff, len, depth);
+    break;
   }
   (*depth)--;
 }
@@ -218,21 +241,30 @@ static int cmd_rexp(char *args)
 {
   srand(time(NULL));
   static char buff[buff_max_size];
-  #undef buff_max_size
-  int len = 0;
-  int depth = 0;
-  gen_rand_expr(buff, &len, &depth);
-  buff[len] = '\0';
-  bool success;
-  word_t a = expr(buff, &success);
-  printf("Random expression: %s\n", buff);
-  if (success)
-  {
-    printf("Evaluated expression: %d\n", a);
+#undef buff_max_size
+  int times = 0;
+  for(char *p = args; *p; p++) {
+    if (*p >= '0' && *p <= '9') {
+      times = times * 10 + (*p - '0');
+    }
   }
-  else
+  for (int i = 0; i < times; i++)
   {
-    printf("Invalid expression.\n");
+    int len = 0;
+    int depth = 0;
+    gen_rand_expr(buff, &len, &depth);
+    buff[len] = '\0';
+    bool success;
+    word_t a = expr(buff, &success);
+    printf("Random expression: %s\n", buff);
+    if (success)
+    {
+      printf("Evaluated expression %d: %d\n", i, a);
+    }
+    else
+    {
+      printf("Invalid expression %d.\n", i);
+    }
   }
   return 0;
 }
