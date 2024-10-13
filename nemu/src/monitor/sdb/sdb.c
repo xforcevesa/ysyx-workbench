@@ -261,6 +261,7 @@ static word_t evaluate_expression(const char* expression, bool *success) {
     // Compile the generated C code using gcc
     if (system("gcc -O0 -Wno-integer-overflow -o temp_eval temp_eval.c") != 0) {
         fprintf(stderr, "Compilation failed\n");
+        *success = 0;
         return 0;
     }
 
@@ -268,6 +269,7 @@ static word_t evaluate_expression(const char* expression, bool *success) {
     FILE* output = popen("./temp_eval", "r");
     if (!output) {
         perror("Failed to run compiled program");
+        *success = 0;
         return 0;
     }
 
