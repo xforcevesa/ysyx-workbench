@@ -397,7 +397,7 @@ static int eval(int level)
     return lval;
   }
 
-  while (type >= level && parse_index <= nr_token)
+  while (type >= level && parse_index < nr_token)
   {
     char str2[44];
     get_token_str(parse_index, str2);
