@@ -231,7 +231,7 @@ static int parse_index = 0;
 
 static int error = false;
 
-static word_t eval(int level)
+static int eval(int level)
 {
 
   if (error)
@@ -269,7 +269,7 @@ static word_t eval(int level)
 
   Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
 
-  word_t lval = 0;
+  int lval = 0;
 
   bool is_success = true;
 
@@ -388,7 +388,7 @@ static word_t eval(int level)
     str = tokens[parse_index].str;
   }
 
-  word_t rval = 0;
+  int rval = 0;
 
   // parse_index++;
   if (parse_index > nr_token)
