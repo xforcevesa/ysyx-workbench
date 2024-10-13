@@ -22,7 +22,9 @@
 
 #include "memory/vaddr.h"
 
-// #define Log(...) (printf(__VA_ARGS__)
+#undef Log
+
+#define Log(...) printf(__VA_ARGS__)
 
 enum
 {
