@@ -374,7 +374,7 @@ static int eval(int level)
   }
   if (error)
   {
-    Log("parse error internal 1, lval = %d", lval);
+    printf("parse error internal 1, lval = %d\n", lval);
     return -1;
   }
 
@@ -462,7 +462,7 @@ static int eval(int level)
     }
     if (error)
     {
-      Log("parse error internal 2, lval = %d", lval);
+      printf("parse error internal 2, lval = %d\n", lval);
       return -1;
     }
     type = tokens[parse_index].type;
@@ -499,7 +499,7 @@ word_t expr(char *e, bool *success)
       continue;
     }
     get_token_str(i, str);
-    printf("token %d: type = %s, str = %s", i, str, tokens[i].str);
+    printf("token %d: type = %s, str = %s\n", i, str, tokens[i].str);
   }
 
   /* TODO: Insert codes to evaluate the expression. */
