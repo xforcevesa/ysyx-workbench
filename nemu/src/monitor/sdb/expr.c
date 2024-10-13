@@ -499,7 +499,7 @@ word_t expr(char *e, bool *success)
       continue;
     }
     get_token_str(i, str);
-    Log("token %d: type = %s, str = %s", i, str, tokens[i].str);
+    printf("token %d: type = %s, str = %s", i, str, tokens[i].str);
   }
 
   /* TODO: Insert codes to evaluate the expression. */
