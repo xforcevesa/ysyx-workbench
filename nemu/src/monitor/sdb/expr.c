@@ -231,7 +231,7 @@ static int parse_index = 0;
 
 static int error = false;
 
-static word_t eval(int level)
+static int eval(int level)
 {
 
   if (error)
@@ -269,7 +269,7 @@ static word_t eval(int level)
 
   Log("Here: level = %d, parse_index = %d, nr_token = %d, type = %d, str = %s", level, parse_index, nr_token, type, str);
 
-  word_t lval = 0;
+  int lval = 0;
 
   bool is_success = true;
 
@@ -304,7 +304,7 @@ static word_t eval(int level)
         }
         else
         {
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -317,7 +317,7 @@ static word_t eval(int level)
         }
         else
         {
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -331,7 +331,7 @@ static word_t eval(int level)
         else
         {
           Log("invalid character in number: %c", *p);
-          error = true;
+          error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         }
       }
       break;
@@ -347,12 +347,12 @@ static word_t eval(int level)
       lval = isa_reg_str2val(str + 1, &is_success);
       if (!is_success)
       {
-        error = true;
+        error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
       }
     }
     else
     {
-      error = true;
+      error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
     }
     break;
   case TK_LPAREN:
@@ -360,7 +360,7 @@ static word_t eval(int level)
     if (tokens[parse_index].type != TK_RPAREN)
     {
       Log("missing right parenthesis");
-      error = true;
+      error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
     }
     parse_index++;
     break;
@@ -374,7 +374,7 @@ static word_t eval(int level)
   }
   if (error)
   {
-    Log("parse error internal 1, lval = %d", lval);
+    printf("parse error internal 1, lval = %d\n", lval);
     return -1;
   }
 
@@ -388,7 +388,7 @@ static word_t eval(int level)
     str = tokens[parse_index].str;
   }
 
-  word_t rval = 0;
+  int rval = 0;
 
   // parse_index++;
   if (parse_index > nr_token)
@@ -397,7 +397,7 @@ static word_t eval(int level)
     return lval;
   }
 
-  while (type >= level && parse_index <= nr_token)
+  while (type >= level && parse_index < nr_token)
   {
     char str2[44];
     get_token_str(parse_index, str2);
@@ -428,7 +428,7 @@ static word_t eval(int level)
       if (rval == 0)
       {
         Log("DIVISION BY ZERO!!!!");
-        error = true;
+        error = true; printf("%s:%d err\n", __FILE__,  __LINE__);
         return -1;
       }
       lval /= rval;
@@ -462,7 +462,7 @@ static word_t eval(int level)
     }
     if (error)
     {
-      Log("parse error internal 2, lval = %d", lval);
+      printf("parse error internal 2, lval = %d\n", lval);
       return -1;
     }
     type = tokens[parse_index].type;
@@ -481,11 +481,16 @@ static word_t eval(int level)
 
 word_t expr(char *e, bool *success)
 {
+  for (int i = 0; i < MAX_TOKENS; i++) {
+    tokens[i].type = 0;
+    tokens[i].str[0] = '\0';
+  }
   parse_index = 0;
   nr_token = 0;
   error = false;
   if (!make_token(e))
   {
+    printf("parse error: %s\n", e);
     *success = false;
     return 0;
   }
@@ -499,7 +504,7 @@ word_t expr(char *e, bool *success)
       continue;
     }
     get_token_str(i, str);
-    Log("token %d: type = %s, str = %s", i, str, tokens[i].str);
+    printf("token %d: type = %s, str = %s\n", i, str, tokens[i].str);
   }
 
   /* TODO: Insert codes to evaluate the expression. */
