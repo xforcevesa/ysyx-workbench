@@ -481,6 +481,10 @@ static int eval(int level)
 
 word_t expr(char *e, bool *success)
 {
+  for (int i = 0; i < MAX_TOKENS; i++) {
+    tokens[i].type = 0;
+    tokens[i].str[0] = '\0';
+  }
   parse_index = 0;
   nr_token = 0;
   error = false;
