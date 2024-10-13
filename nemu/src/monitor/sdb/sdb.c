@@ -333,7 +333,8 @@ static int cmd_rexp(char *args)
     }
     else
     {
-      printf("Invalid expression %d.\n", i);
+      printf("Error: Invalid expression %d.\n", i);
+      exit(EXIT_FAILURE);
     }
   }
   printf("Passed: %d/%d\n", passed, times);
