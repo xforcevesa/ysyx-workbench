@@ -318,13 +318,14 @@ static int cmd_rexp(char *args)
     {
       i--; continue;
     }
-    word_t a = expr(buff, &success);
+    unsigned a = expr(buff, &success);
     printf("Random expression: %s\n", buff);
     if (success)
     {
       if (a != real_a)
       {
         printf("Error: Evaluated expression %d: %u, Real expression: %u\n", i, a, real_a);
+        exit(EXIT_FAILURE);
       } else {
         printf("Correct: Evaluated expression %d: %u\n", i, a);
         passed++;
