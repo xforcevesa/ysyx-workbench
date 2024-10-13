@@ -345,7 +345,7 @@ static int cmd_p(char *args)
   word_t a = expr(args, &success);
   if (success)
   {
-    printf("expression: %d\n", a);
+    printf("expression: %u\n", a);
   }
   return 0;
 }
